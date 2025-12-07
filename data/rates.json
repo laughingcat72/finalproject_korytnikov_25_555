@@ -1,0 +1,45 @@
+{
+  "pairs": {
+    "BTC_USD": {
+      "rate": 88053,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "ETH_USD": {
+      "rate": 2948.04,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "SOL_USD": {
+      "rate": 128.56,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "EUR_USD": {
+      "rate": 1.1648223645894,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "CAD_USD": {
+      "rate": 0.7215007215007215,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "JPY_USD": {
+      "rate": 0.006443361243826455,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "GBP_USD": {
+      "rate": 1.3338668800853675,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    },
+    "AUD_USD": {
+      "rate": 0.6632619221330504,
+      "updated_at": "2025-12-07T14:37:40.711318Z",
+      "source": "Mixed"
+    }
+  },
+  "last_refresh": "2025-12-07T14:37:40.711318Z"
+}

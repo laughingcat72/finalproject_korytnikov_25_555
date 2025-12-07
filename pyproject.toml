@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "finalproject_korytnikov_25_555"
+version = "0.1.0"
+description = "Торговая платформа для валют и криптовалют"
+authors = ["Твоё Имя <email@example.com>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.31.0"
+
+[tool.poetry.dev-dependencies]
+ruff = "^0.1.0"
+prettytable = "^3.9.0"
+
+[tool.poetry.scripts]
+valutatrade = "main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+[tool.ruff.format]
+quote-style = "double"
