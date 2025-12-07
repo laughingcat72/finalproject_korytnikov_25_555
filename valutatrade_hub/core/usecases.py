@@ -179,9 +179,7 @@ class AuthUseCase:
 
         old_balance = wallets[currency]
         if old_balance < amount:
-            print(
-                f'Недостаточно средств: доступно {old_balance} {currency}, требуется {amount} {currency}')
-            return False
+            raise InsufficientFundsError(old_balance, amount, currency)
         else:
             new_balance = old_balance - amount
         wallets[currency] = new_balance
