@@ -74,7 +74,8 @@ KNOWN_CURRENCIES = {
     "EUR": FiatCurrency("Euro", "EUR", "Eurozone"),
     "RUB": FiatCurrency("Russian Ruble", "RUB", "Russia",),
     "BTC": CryptoCurrency("Bitcoin", "BTC", "SHA-256", 1120000000000),
-    "ETH": CryptoCurrency("Ethereum", "ETH", "Ethash", 372000000000)
+    "ETH": CryptoCurrency("Ethereum", "ETH", "Ethash", 372000000000),
+    "SCR": FiatCurrency("Сейшельская рупия", 'SCR', 'Сейшелы')
 }
 
 

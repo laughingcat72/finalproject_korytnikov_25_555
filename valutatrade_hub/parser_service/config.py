@@ -18,7 +18,7 @@ class ParserConfig:
 
     # Списки валют с default_factory
     FIAT_CURRENCIES: Tuple[str, ...] = field(
-        default_factory=lambda: ("EUR", "CAD", "JPY", "GBP", "AUD"))
+        default_factory=lambda: ("EUR", "CAD", "JPY", "GBP", "AUD", "SCR", "RUB"))
     CRYPTO_CURRENCIES: Tuple[str, ...] = field(
         default_factory=lambda: ("BTC", "ETH", "SOL"))
 
