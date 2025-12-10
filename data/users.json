@@ -5,5 +5,12 @@
     "salt": "d2bf89a554ef62c3",
     "hashed_password": "05037d89b88484fe98b309cf2750281373e5ed910d04c5fd34ec4c713d8858b5",
     "registration_date": "2025-11-18T18:29:21.433329"
+  },
+  {
+    "user_id": 2,
+    "username": "edward",
+    "salt": "254c76dfb652f7aa",
+    "hashed_password": "6c69de8851965e8f84cafc0d5b253d32b2f6f2e0d060f8407c459996a7ebaead",
+    "registration_date": "2025-12-10T19:08:28.238599"
   }
 ]

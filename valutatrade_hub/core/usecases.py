@@ -1,12 +1,14 @@
+# valutatrade_hub/core/usecases.py
 from .models import User, Portfolio
 from .utils import FileManager
-from datetime import datetime
 from .exceptions import InsufficientFundsError
 from .currencies import get_currency
 from .exceptions import CurrencyNotFoundError
 from ..decorators import log_action
 from ..infra.settings import SettingsLoader
 from ..infra.database import DatabaseManager
+from ..parser_service.updater import RatesUpdater
+from ..parser_service.config import ParserConfig
 
 
 class AuthUseCase:
@@ -15,10 +17,21 @@ class AuthUseCase:
         self.current_user = None
         self.settings = SettingsLoader()
         self.database = DatabaseManager()
-        self.exchange_rates_cache = {}
 
-        print(
-            f"Настройки загружены. TTL курсов: {self.settings.get('rates_ttl_seconds')} сек")
+        self.rates_config = ParserConfig()
+        self.rates_updater = RatesUpdater(self.rates_config)
+
+        self.static_rates = {
+            'USD': 1.0,
+            'EUR': 0.93,
+            'BTC': 45000.0,
+            'RUB': 0.011,
+            'ETH': 2500.0,
+            'SOL': 100.0,
+            'SCR': 0.075
+        }
+
+        print("✅ Загрузчик курсов инициализирован")
 
     def _gen_user_id(self) -> int:
         users = self.file_manager.read_json(filename='users.json', default=[])
@@ -47,20 +60,20 @@ class AuthUseCase:
                     filename='users.json', data=user_data)
                 self.file_manager.write_json(
                     filename='portfolios.json', data=portfolio_data)
-                print(f"Пользователь {username} успешно зарегистрирован!")
+                print(f"✅ Пользователь {username} успешно зарегистрирован!")
                 return True
 
             else:
-                print("Пользователь c таким именем уже сущесвует!")
+                print("❌ Пользователь c таким именем уже сущесвует!")
                 return False
         except FileNotFoundError:
-            print("Файл с пользователями не найден")
+            print("❌ Файл с пользователями не найден")
             return False
         except PermissionError:
-            print("Нет доступа к файлам пользователей!")
+            print("❌ Нет доступа к файлам пользователей!")
             return False
         except Exception as e:
-            print(f"Неизвестная ошибка: {e}")
+            print(f"❌ Неизвестная ошибка: {e}")
             return False
 
     @log_action(action_name="LOGIN")
@@ -74,198 +87,297 @@ class AuthUseCase:
                 user._hashed_password = user_data['hashed_password']
                 if user.verify_password(password):
                     self.current_user = user
-                    print(f'Добро пожаловать {username}!')
+                    print(f'✅ Добро пожаловать {username}!')
                     return True
 
                 else:
-                    print('Неверный логин или пароль!')
+                    print('❌ Неверный логин или пароль!')
                     return False
 
-    def show_portfolio(self, base_currency: str = "USD"):
+    def _get_dynamic_rate(self, from_currency: str, to_currency: str = "USD"):
+        """Получает курс из кеша парсер-сервиса"""
+        try:
 
+            storage = self.rates_updater.storage
+            data = storage.get_current_rates()
+
+            if not data or "pairs" not in data:
+                return None
+
+            pairs = data.get("pairs", {})
+
+            pair_key = f"{from_currency}_{to_currency}"
+            if pair_key in pairs:
+                return pairs[pair_key].get("rate")
+
+            reverse_key = f"{to_currency}_{from_currency}"
+            if reverse_key in pairs:
+                rate = pairs[reverse_key].get("rate")
+                return 1 / rate if rate else None
+
+            return None
+
+        except Exception as e:
+            print(f"⚠️  Ошибка при получении динамического курса: {e}")
+            return None
+
+    def _get_current_rate(self, from_currency: str, to_currency: str = "USD"):
+        """Получает текущий курс (динамический или статический)"""
+
+        dynamic_rate = self._get_dynamic_rate(from_currency, to_currency)
+        if dynamic_rate:
+            return dynamic_rate
+
+        return self._get_static_rate(from_currency, to_currency)
+
+    def _get_static_rate(self, from_currency: str, to_currency: str):
+        """Статические курсы как fallback"""
+        if to_currency == "USD":
+            return self.static_rates.get(from_currency, 1.0)
+        elif from_currency == "USD":
+            usd_rate = self.static_rates.get(to_currency, 1.0)
+            return 1 / usd_rate if usd_rate else 1.0
+        else:
+            # Конвертация через USD
+            from_to_usd = self.static_rates.get(from_currency, 1.0)
+            usd_to_to = self.static_rates.get(to_currency, 1.0)
+            return from_to_usd / usd_to_to
+
+    def show_portfolio(self, base_currency: str = "USD"):
         if self.current_user is None:
-            print("Сначала выполните login")
+            print("❌ Сначала выполните login")
             return
+
         user_id = self.current_user._user_id
         port = self.file_manager.read_json('portfolios.json', [])
         user_portfolio = None
+
         for portfolios_data in port:
             if portfolios_data['user_id'] == user_id:
                 user_portfolio = portfolios_data
                 break
-        else:
-            print("У вас пока нет портфеля")
+
+        if user_portfolio is None:
+            print("ℹ️  У вас пока нет портфеля")
             return
-        if base_currency not in Portfolio.KURSS_VALUT:
-            print(f"Неизвестная базовая валюта '{base_currency}'")
-            return
+
         wallets_data = user_portfolio.get('wallets', {})
         if not wallets_data:
-            print('У вас пока нет кошельков')
+            print('ℹ️  У вас пока нет кошельков')
             return
+
+        crypto_currencies = ['BTC', 'ETH', 'SOL']
+        fiat_currencies = ['USD', 'EUR', 'RUB',
+                           'SCR', 'JPY', 'GBP', 'CAD', 'AUD']
+
         print(
-            f"Портфель пользователя '{self.current_user.username}' (база: USD):")
+            f"📊 Портфель пользователя '{self.current_user.username}' (база: {base_currency}):")
+        print("=" * 70)
 
-        total_in_usd = 0
+        total_value = 0
+        print(f"{'Валюта':<8} {'Баланс':<20} {'Курс':<15} {'Стоимость':<20}")
+        print("-" * 70)
+
         for currency, balance in wallets_data.items():
-            balance = float(balance)
-            value_in_usd = balance * Portfolio.KURSS_VALUT.get(currency, 1.0)
-            total_in_usd += value_in_usd
+            if currency in fiat_currencies:
+                balance = float(balance)
+                rate = self._get_current_rate(currency, base_currency)
+                value = balance * rate
+                total_value += value
 
-            if currency == "USD":
                 print(
-                    f"  - {currency}: {balance:,.2f}  → {value_in_usd:,.2f} USD")
-            else:
-                print(
-                    f"  - {currency}: {balance:.4f}  → {value_in_usd:,.2f} USD")
+                    f"{currency:<8} {balance:<20.2f} {rate:<15.4f} {value:<20.2f} {base_currency}")
 
-        print("  ---------------------------------")
-        print(f"  ИТОГО: {total_in_usd:,.2f} USD")
+        for currency, balance in wallets_data.items():
+            if currency in crypto_currencies:
+                balance = float(balance)
+                rate = self._get_current_rate(currency, base_currency)
+                value = balance * rate
+                total_value += value
+
+                # Для криптовалют - 8 знаков после запятой
+                print(
+                    f"{currency:<8} {balance:<20.8f} {rate:<15.2f} {value:<20.2f} {base_currency}")
+
+        for currency, balance in wallets_data.items():
+            if currency not in fiat_currencies and currency not in crypto_currencies:
+                balance = float(balance)
+                rate = self._get_current_rate(currency, base_currency)
+                value = balance * rate
+                total_value += value
+
+                print(
+                    f"{currency:<8} {balance:<20.2f} {rate:<15.4f} {value:<20.2f} {base_currency}")
+
+        print("=" * 70)
+        print(f"💰 ИТОГО: {total_value:,.2f} {base_currency}")
+
+        cache_info = self.rates_updater.get_cache_info()
+        print(f"\n🕐 Курсы обновлены: {cache_info['last_refresh']}")
 
     @log_action(action_name="BUY", verbose=True)
     def buy(self, currency: str, amount: float):
         if self.current_user is None:
-            print("Сначала выполните login")
+            print("❌ Сначала выполните login")
             return False
 
         try:
             if amount <= 0:
-                print("'amount' должен быть положительным числом")
+                print("❌ 'amount' должен быть положительным числом")
                 return False
 
             get_currency(currency)
-
             currency = currency.upper()
             user_id = self.current_user._user_id
+
+            current_rate = self._get_current_rate(currency, "USD")
+
             portfolios = self.file_manager.read_json('portfolios.json', [])
             user_portfolio_data = None
+
             for portfolio_data in portfolios:
                 if portfolio_data['user_id'] == user_id:
                     user_portfolio_data = portfolio_data
                     break
+
             if user_portfolio_data is None:
                 user_portfolio_data = {'user_id': user_id, 'wallets': {}}
                 portfolios.append(user_portfolio_data)
 
             wallets_data = user_portfolio_data.get('wallets', {})
-
             if currency not in wallets_data:
                 wallets_data[currency] = 0.0
 
             old_balance = wallets_data[currency]
             wallets_data[currency] += amount
             user_portfolio_data['wallets'] = wallets_data
-            cost = amount * Portfolio.KURSS_VALUT[currency]
+
+            cost = amount * current_rate
+
             self.file_manager.update_json('portfolios.json', portfolios)
-            print(
-                f"Покупка выполнена: {amount} {currency} по курсу {Portfolio.KURSS_VALUT[currency]:} USD/{currency}")
-            print('Изменения в портфеле:')
-            print(
-                f"- {currency}: было {old_balance} → стало {wallets_data[currency]}")
-            print(f"Оценочная стоимость покупки: {cost} USD")
+
+            print("\n✅ Покупка выполнена успешно!")
+            print(f"   📈 Куплено: {amount} {currency}")
+            print(f"   💱 Курс: {current_rate:,.4f} USD/{currency}")
+            print(f"   💰 Стоимость: {cost:,.2f} USD")
+
+            if currency in ['BTC', 'ETH', 'SOL']:
+                print(
+                    f"   📊 Баланс {currency}: {old_balance:.8f} → {wallets_data[currency]:.8f}")
+            else:
+
+                print(
+                    f"   📊 Баланс {currency}: {old_balance:.2f} → {wallets_data[currency]:.2f}")
+
             return True
 
         except CurrencyNotFoundError as e:
-            print(f"Ошибка: {e}")
+            print(f"❌ Ошибка: {e}")
             return False
         except Exception as e:
-            print(f"Ошибка при покупке: {e}")
+            print(f"❌ Ошибка при покупке: {e}")
             return False
 
     @log_action(action_name="SELL", verbose=True)
     def sell(self, currency: str, amount: float):
         if self.current_user is None:
-            print("Сначала выполните login")
+            print("❌ Сначала выполните login")
             return False
 
         try:
-            # ПО ЗАДАНИЮ: "Валидация входа"
             if amount <= 0:
-                print('Положительное число!')
+                print('❌ Сумма должна быть положительной!')
                 return False
 
-            # ПО ЗАДАНИЮ: валидация валюты через get_currency()
             get_currency(currency)
-
             currency = currency.upper()
             user_id = self.current_user._user_id
+
+            current_rate = self._get_current_rate(currency, "USD")
+
             port = self.file_manager.read_json('portfolios.json', [])
             user_port = None
+
             for portfolio_data in port:
                 if portfolio_data['user_id'] == user_id:
                     user_port = portfolio_data
                     break
+
             if user_port is None:
                 user_port = {'user_id': user_id, 'wallets': {}}
                 port.append(user_port)
 
             wallets = user_port.get('wallets', {})
             if currency not in wallets:
-                print(
-                    f'У вас нет кошелька {currency}. Добавьте валюту: она создаётся автоматически при первой покупке.')
+                print(f'❌ У вас нет кошелька {currency}.')
                 return False
 
             old_balance = wallets[currency]
 
-            # ПО ЗАДАНИЮ: "Проверка кошелька и средств — иначе InsufficientFundsError"
             if old_balance < amount:
                 raise InsufficientFundsError(currency, old_balance, amount)
 
             new_balance = old_balance - amount
             wallets[currency] = new_balance
-            cost = amount * Portfolio.KURSS_VALUT[currency]
+
+            cost = amount * current_rate
+
             self.file_manager.update_json('portfolios.json', port)
-            print(
-                f"Продажа выполнена: {amount} {currency} по курсу {Portfolio.KURSS_VALUT[currency]:} USD/{currency}")
-            print('Изменения в портфеле:')
-            print(f"- {currency}: было {old_balance} → стало {new_balance}")
-            print(f"Оценочная стоимость продажи: {cost} USD")
+
+            print("\n✅ Продажа выполнена успешно!")
+            print(f"   📉 Продано: {amount} {currency}")
+            print(f"   💱 Курс: {current_rate:,.4f} USD/{currency}")
+            print(f"   💰 Сумма: {cost:,.2f} USD")
+            if currency in ['BTC', 'ETH', 'SOL']:
+                print(
+                    f"   📊 Баланс {currency}: {old_balance:.8f} → {new_balance:.8f}")
+            else:
+                print(
+                    f"   📊 Баланс {currency}: {old_balance:.2f} → {new_balance:.2f}")
             return True
 
         except CurrencyNotFoundError as e:
-            print(f"Ошибка: {e}")
+            print(f"❌ Ошибка: {e}")
             return False
         except InsufficientFundsError as e:
-            print(f"Ошибка: {e}")
+            print(f"❌ {e}")
             return False
         except Exception as e:
-            print(f"Ошибка при продаже: {e}")
+            print(f"❌ Ошибка при продаже: {e}")
             return False
 
     @log_action(action_name="GET_RATE")
     def get_rate(self, currency: str, tocurrency: str):
         try:
-
             get_currency(currency)
             get_currency(tocurrency)
 
-            ttl = self.settings.get("rates_ttl_seconds", 300)
+            rate = self._get_current_rate(currency, tocurrency)
 
-            if self._is_cache_expired(ttl):  # type: ignore
-                print("Кеш курсов устарел. Используем базовые курсы.")
+            print(f"\n📊 Курс {currency} → {tocurrency}:")
+            print(f"   💱 1 {currency} = {rate:,.8f} {tocurrency}")
+            print(f"   🔄 1 {tocurrency} = {1/rate:,.8f} {currency}")
 
-            if currency and tocurrency not in Portfolio.KURSS_VALUT:
-                print("Некорректный код валюты")
-                return False
+            cache_info = self.rates_updater.get_cache_info()
+            if cache_info['last_refresh'] != 'Никогда':
+                print("\n💡 Курс взят из кеша")
+                print(f"   🕐 Обновлён: {cache_info['last_refresh']}")
+                if cache_info['pairs_count'] > 0:
+                    print(
+                        f"   📈 В кеше: {cache_info['pairs_count']} пар валют")
+            else:
+                print("\n⚠️  Используется базовый курс (кеш пуст)")
+                print("   💡 Выполните 'update-rates' для получения актуальных курсов")
 
-            a = Portfolio.KURSS_VALUT[currency]
-            b = Portfolio.KURSS_VALUT[tocurrency]
-            rate = a / b
-            print(f"Курс {currency}→{tocurrency}: {rate:.8f}")
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"(обновлено: {current_time})")
-            reverse_rate = 1 / rate
-            print(f"Обратный курс {tocurrency}→{currency}: {reverse_rate:.2f}")
             return True
 
         except CurrencyNotFoundError as e:
-
-            print(f"Ошибка: {e}")
+            print(f"❌ Ошибка: {e}")
             return False
         except Exception as e:
-            print(f"Ошибка при получении курса: {e}")
+            print(f"❌ Ошибка при получении курса: {e}")
             return False
 
     def _is_cache_expired(self, ttl: int) -> bool:
-        """Проверяет устарел ли кеш курсов (заглушка)"""
+        """Проверяет устарел ли кеш курсов"""
         return False

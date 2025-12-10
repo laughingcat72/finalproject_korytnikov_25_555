@@ -114,12 +114,6 @@ class Wallet:
 
 
 class Portfolio:
-    KURSS_VALUT = {
-        'USD': 1.0,
-        'EUR': 0.93,
-        'BTC': 45000.0,
-        'RUB': 0.011
-    }
 
     def __init__(self, user_id: int, wallets):
         self._user_id = user_id
@@ -144,14 +138,6 @@ class Portfolio:
             return self._wallets[currency_code]
         else:
             raise ValueError(f'Ошибка,{currency_code} не найдена!')
-
-    def get_total_value(self):
-        total = 0.0
-        for currency_code, wallet in self._wallets.items():
-            balance = wallet.balance
-            a = self.KURSS_VALUT[currency_code]*balance
-            total += a
-        return total
 
     def get_porfolio_data(self):
 

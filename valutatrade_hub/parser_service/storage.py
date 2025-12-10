@@ -14,7 +14,6 @@ class RatesStorage:
         self.rates_file_path = Path(rates_file_path)
         self.history_file_path = Path(history_file_path)
 
-        # Создаем директории если их нет
         self.rates_file_path.parent.mkdir(exist_ok=True, parents=True)
         self.history_file_path.parent.mkdir(exist_ok=True, parents=True)
 
@@ -33,7 +32,6 @@ class RatesStorage:
         try:
             timestamp = datetime.utcnow().isoformat() + "Z"
 
-            # Создаем структуру данных
             pairs_data = {}
             for pair_key, rate in rates.items():
                 pairs_data[pair_key] = {
@@ -47,12 +45,10 @@ class RatesStorage:
                 "last_refresh": timestamp
             }
 
-            # Атомарная запись через временный файл
             temp_file = self.rates_file_path.with_suffix('.tmp')
             with open(temp_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
 
-            # Переименовываем
             temp_file.replace(self.rates_file_path)
 
             logger.info(
@@ -64,31 +60,16 @@ class RatesStorage:
             return False
 
     def save_to_history(self, rates: Dict[str, float], source: str):
-        """
-        Сохраняет курсы в exchange_rates.json (исторические данные)
-        Формат как в задании:
-        {
-          "id": "BTC_USD_2025-10-10T12:00:00Z",
-          "from_currency": "BTC",
-          "to_currency": "USD",
-          "rate": 59337.21,
-          "timestamp": "2025-10-10T12:00:00Z",
-          "source": "CoinGecko",
-          "meta": { ... }
-        }
-        """
+
         try:
             timestamp = datetime.utcnow().isoformat() + "Z"
 
-            # Читаем существующую историю или создаем новую
             history = self._load_history()
 
-            # Добавляем новые записи
             for pair_key, rate in rates.items():
-                # Разбираем пару валют
+
                 from_currency, to_currency = pair_key.split('_')
 
-                # Создаем уникальный ID как в задании
                 record_id = f"{from_currency}_{to_currency}_{timestamp}"
 
                 record = {
@@ -99,7 +80,7 @@ class RatesStorage:
                     "timestamp": timestamp,
                     "source": source,
                     "meta": {
-                        "request_ms": 0,  # Можно добавить реальное время
+                        "request_ms": 0,
                         "status_code": 200
                     }
                 }
@@ -107,7 +88,6 @@ class RatesStorage:
                 history.append(record)
                 logger.debug(f"Добавлена историческая запись: {record_id}")
 
-            # Сохраняем историю
             temp_file = self.history_file_path.with_suffix('.tmp')
             with open(temp_file, 'w', encoding='utf-8') as f:
                 json.dump(history, f, indent=2, ensure_ascii=False)
@@ -152,12 +132,11 @@ class RatesStorage:
             return True
 
         try:
-            # Убираем 'Z' если есть и парсим
+
             last_refresh_clean = last_refresh.rstrip('Z')
             last_time = datetime.fromisoformat(last_refresh_clean)
             current_time = datetime.utcnow()
 
-            # Оба времени теперь offset-naive
             age = (current_time - last_time).total_seconds()
             return age > ttl_seconds
 

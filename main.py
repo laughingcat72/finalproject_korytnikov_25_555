@@ -1,7 +1,6 @@
 
 import sys
 import shlex
-from valutatrade_hub.cli.interface import auth_use_case
 
 
 def get_time_based_greeting():
@@ -68,30 +67,25 @@ def show_help():
 def main():
     """Главная функция с интерактивным циклом"""
 
-    # Показываем приветствие
     show_welcome()
 
     while True:
         try:
-            # Получаем ввод пользователя
+
             user_input = input("\n💲 Введите команду: ").strip()
 
-            # Проверяем команды выхода
             if user_input.lower() in ['exit', 'quit', 'выход']:
                 print("\n👋 До свидания! Ждем вас снова!")
                 break
 
-            # Показываем помощь
             if user_input.lower() in ['help', 'помощь', '?']:
                 show_help()
                 continue
 
-            # Если пустой ввод
             if not user_input:
                 print("❌ Пустая команда. Введите 'help' для справки")
                 continue
 
-            # Парсим команду
             try:
                 args = shlex.split(user_input)
             except ValueError as e:
@@ -100,22 +94,21 @@ def main():
                 print("   Пример: register \"Иван Иванов\" password123")
                 continue
 
-            # Подменяем sys.argv и вызываем интерфейс
-            original_argv = sys.argv.copy()  # Сохраняем оригинал
-            sys.argv = ['main.py'] + args    # Подменяем
+            original_argv = sys.argv.copy()
+            sys.argv = ['main.py'] + args
 
             try:
-                # Импортируем и вызываем интерфейс
+
                 from valutatrade_hub.cli.interface import interface
                 interface()
             finally:
-                sys.argv = original_argv  # Восстанавливаем оригинал
+                sys.argv = original_argv
 
         except KeyboardInterrupt:
             print("\n\n👋 До свидания!")
             break
         except SystemExit:
-            # Игнорируем SystemExit от argparse
+
             continue
         except Exception as e:
             print(f"⚠️  Ошибка: {e}")

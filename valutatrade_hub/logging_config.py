@@ -3,9 +3,6 @@ from pathlib import Path
 
 
 def setup_logging():
-    """
-    Настройка логирования согласно заданию
-    """
 
     log_dir = Path("logs")
     log_dir.mkdir(exist_ok=True)
@@ -38,5 +35,4 @@ def setup_logging():
     return logger
 
 
-# Вызываем настройку
 setup_logging()

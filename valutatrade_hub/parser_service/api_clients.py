@@ -68,7 +68,6 @@ class CoinGeckoClient(BaseApiClient):
 
 
 class ExchangeRateApiClient(BaseApiClient):
-    """Клиент для работы с ExchangeRate-API"""
 
     def __init__(self, config: ParserConfig):
         self.config = config
@@ -76,12 +75,11 @@ class ExchangeRateApiClient(BaseApiClient):
 
         if not self.api_key:
             self.api_key = "71ccd029b9f44cf21cdf6fe7"
-            logger.warning("Используем хардкодный API ключ")
 
         self.base_url = f"https://v6.exchangerate-api.com/v6/{self.api_key}/latest/USD"
 
     def fetch_rates(self) -> Dict[str, float]:
-        """Получить курсы фиатных валют"""
+
         try:
             logger.info("Запрос к ExchangeRate-API")
 
@@ -105,20 +103,16 @@ class ExchangeRateApiClient(BaseApiClient):
                 print(f"DEBUG: API Error type: {error_type}")
                 raise ApiRequestError(f"API вернул ошибку: {error_type}")
 
-            # ИСПРАВЛЕНИЕ: используем "conversion_rates" вместо "rates"
             rates_data = data.get('conversion_rates', {})
 
-            # Выводим первые 5 валют для проверки
             available_currencies = list(rates_data.keys())
             print(f"DEBUG: Всего валют: {len(available_currencies)}")
             print(f"DEBUG: Первые 5: {available_currencies[:5]}")
 
-            # Ищем нужные нам валюты
             rates = {}
             for fiat_code in self.config.FIAT_CURRENCIES:
                 if fiat_code in rates_data:
-                    # API возвращает: 1 USD = X EUR (например 0.8585)
-                    # Нам нужно: 1 EUR = ? USD = 1 / 0.8585 = 1.164
+
                     rate_from_api = rates_data[fiat_code]
                     if rate_from_api > 0:
                         rate = 1 / rate_from_api

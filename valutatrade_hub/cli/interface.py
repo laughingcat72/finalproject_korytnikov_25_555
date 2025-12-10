@@ -9,6 +9,21 @@ auth_use_case = AuthUseCase()
 
 
 def interface():
+    # Проверяем наличие актуальных курсов при запуске
+    try:
+        from ..parser_service.updater import RatesUpdater
+        from ..parser_service.config import ParserConfig
+
+        config = ParserConfig()
+        updater = RatesUpdater(config)
+        cache_info = updater.get_cache_info()
+
+        if cache_info['last_refresh'] == 'Никогда':
+            print("⚠️  Курсы валют не загружены")
+            print("   Используйте 'update-rates' для получения актуальных курсов")
+            print("   До обновления будут использоваться базовые курсы\n")
+    except (argparse.ArgumentError, SystemExit):
+        pass
     parser = argparse.ArgumentParser(
         description="CLI Интерфейс ValutaTrade Hub",
         add_help=False,
@@ -123,7 +138,7 @@ def _handle_update_rates(source=None):
         if not config.EXCHANGERATE_API_KEY:
             config.EXCHANGERATE_API_KEY = "71ccd029b9f44cf21cdf6fe7"
         updater = RatesUpdater(config)
-        result = updater.run_update(source)
+        result = updater.run_update(source)  # type: ignore
         if result["success"]:
             print(
                 f"Update successful. Total rates updated: {result['total_rates']}")

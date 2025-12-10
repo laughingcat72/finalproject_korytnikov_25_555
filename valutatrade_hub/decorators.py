@@ -7,14 +7,11 @@ logger = logging.getLogger("valutatrade")
 
 
 def log_action(action_name=None, verbose=False):
-    """
-    Декоратор для логирования доменных операций
-    """
 
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # Данные для логирования
+
             timestamp = datetime.now().isoformat()
             username = "anonymous"
             currency_code = ""

@@ -1,29 +1,21 @@
 [tool.poetry]
-name = "finalproject_korytnikov_25_555"
+name = "valutatrade-hub"  # Имя должно совпадать с основной папкой
 version = "0.1.0"
-description = "Торговая платформа для валют и криптовалют"
-authors = ["Твоё Имя <email@example.com>"]
-readme = "README.md"
-license = "MIT"
+
+# Эта строка ОБЯЗАТЕЛЬНА для указания пакетов:
+packages = [{include = "valutatrade_hub"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.14.0"
 requests = "^2.31.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 ruff = "^0.1.0"
-prettytable = "^3.9.0"
 
+# Выберите ОДИН из вариантов:
 [tool.poetry.scripts]
-valutatrade = "main:main"
+# Вариант 1: для запуска старого CLI через argparse
+project = "valutatrade_hub.cli.interface:interface"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.ruff]
-line-length = 88
-target-version = "py38"
-
-[tool.ruff.format]
-quote-style = "double"
+# ИЛИ Вариант 2: для запуска нового интерактивного CLI из main.py
+# project = "main:main"

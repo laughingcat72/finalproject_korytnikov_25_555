@@ -29,7 +29,7 @@ class FileManager:
 
     def update_json(self, filename: str, data: list):
         file_path = self._get_file_path(filename)
-        # Удали эту строку полностью: file_json = self.read_json(filename, [])
+
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
         return True

@@ -27,5 +27,5 @@ class SettingsLoader:
         return self._config.get(key, default)
 
     def reload(self):
-        """Перезагрузка конфигурации"""
+
         self._load_config()
