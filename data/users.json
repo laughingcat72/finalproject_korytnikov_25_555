@@ -12,5 +12,33 @@
     "salt": "254c76dfb652f7aa",
     "hashed_password": "6c69de8851965e8f84cafc0d5b253d32b2f6f2e0d060f8407c459996a7ebaead",
     "registration_date": "2025-12-10T19:08:28.238599"
+  },
+  {
+    "user_id": 3,
+    "username": "r2",
+    "salt": "b32c2705f1afc9aa",
+    "hashed_password": "1a205f82e473763daa81153d7bab2ea174b57452596e02affc5fe531c30f27fe",
+    "registration_date": "2025-12-12T14:05:41.726091"
+  },
+  {
+    "user_id": 4,
+    "username": "r3",
+    "salt": "b1743035f6fc3cca",
+    "hashed_password": "d9a6a7ac8b7983b7dfef78a03802cb5f32b7c61ea7104c5f17057bde1d4e1fe5",
+    "registration_date": "2025-12-12T14:08:35.124525"
+  },
+  {
+    "user_id": 5,
+    "username": "r5",
+    "salt": "a15ec83eee885d82",
+    "hashed_password": "3345c054993300dd52a7b22ccafd553c8c5d9dbde18fd6fe1d4b18c48bc2d7a6",
+    "registration_date": "2025-12-12T14:44:29.138016"
+  },
+  {
+    "user_id": 6,
+    "username": "r6",
+    "salt": "8cacd7c12e5d33f3",
+    "hashed_password": "6492741f337d163056f563706d96bdbb341a81a70121205e68ec085ee31cd280",
+    "registration_date": "2025-12-12T14:48:22.719068"
   }
 ]

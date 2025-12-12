@@ -95,30 +95,41 @@ class AuthUseCase:
                     return False
 
     def _get_dynamic_rate(self, from_currency: str, to_currency: str = "USD"):
-        """Получает курс из кеша парсер-сервиса"""
+
         try:
+            from_currency = from_currency.upper()
+            to_currency = to_currency.upper()
 
             storage = self.rates_updater.storage
             data = storage.get_current_rates()
 
             if not data or "pairs" not in data:
+
                 return None
 
             pairs = data.get("pairs", {})
 
+            # Прямая пара
             pair_key = f"{from_currency}_{to_currency}"
-            if pair_key in pairs:
-                return pairs[pair_key].get("rate")
 
+            if pair_key in pairs:
+                rate = pairs[pair_key].get("rate")
+
+                return rate
+
+            # Обратная пара
             reverse_key = f"{to_currency}_{from_currency}"
+
             if reverse_key in pairs:
                 rate = pairs[reverse_key].get("rate")
-                return 1 / rate if rate else None
+
+                if rate and rate != 0:
+                    return 1 / rate
 
             return None
 
         except Exception as e:
-            print(f"⚠️  Ошибка при получении динамического курса: {e}")
+            print(f"DEBUG: Ошибка в _get_dynamic_rate: {e}")
             return None
 
     def _get_current_rate(self, from_currency: str, to_currency: str = "USD"):
@@ -131,17 +142,29 @@ class AuthUseCase:
         return self._get_static_rate(from_currency, to_currency)
 
     def _get_static_rate(self, from_currency: str, to_currency: str):
-        """Статические курсы как fallback"""
-        if to_currency == "USD":
-            return self.static_rates.get(from_currency, 1.0)
-        elif from_currency == "USD":
-            usd_rate = self.static_rates.get(to_currency, 1.0)
-            return 1 / usd_rate if usd_rate else 1.0
-        else:
-            # Конвертация через USD
-            from_to_usd = self.static_rates.get(from_currency, 1.0)
-            usd_to_to = self.static_rates.get(to_currency, 1.0)
-            return from_to_usd / usd_to_to
+        from_currency = from_currency.upper()
+        to_currency = to_currency.upper()
+
+        if from_currency == to_currency:
+            return 1.0
+
+        from_rate = self.static_rates.get(from_currency)
+        to_rate = self.static_rates.get(to_currency)
+
+        if from_rate is not None and to_rate is not None:
+            if to_rate != 0:
+                return from_rate / to_rate
+            return 1.0
+
+        if from_currency == "USD" and to_rate is not None:
+            if to_rate != 0:
+                return 1 / to_rate
+
+        if to_currency == "USD" and from_rate is not None:
+            return from_rate
+
+        print(f"⚠️  Нет статического курса для {from_currency}→{to_currency}")
+        return 1.0
 
     def show_portfolio(self, base_currency: str = "USD"):
         if self.current_user is None:

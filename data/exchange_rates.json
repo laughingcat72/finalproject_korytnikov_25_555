@@ -670,5 +670,365 @@
       "request_ms": 0,
       "status_code": 200
     }
+  },
+  {
+    "id": "BTC_USD_2025-12-12T10:10:57.160680Z",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 92572,
+    "timestamp": "2025-12-12T10:10:57.160680Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2025-12-12T10:10:57.160680Z",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 3253.31,
+    "timestamp": "2025-12-12T10:10:57.160680Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "SOL_USD_2025-12-12T10:10:57.160680Z",
+    "from_currency": "SOL",
+    "to_currency": "USD",
+    "rate": 138.21,
+    "timestamp": "2025-12-12T10:10:57.160680Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "EUR_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "EUR",
+    "to_currency": "USD",
+    "rate": 1.1732957878681216,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "CAD_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "CAD",
+    "to_currency": "USD",
+    "rate": 0.7259528130671506,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "JPY_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "JPY",
+    "to_currency": "USD",
+    "rate": 0.006429561581054911,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "GBP_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "GBP",
+    "to_currency": "USD",
+    "rate": 1.339405304045004,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "AUD_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "AUD",
+    "to_currency": "USD",
+    "rate": 0.6661781360335753,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "SCR_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "SCR",
+    "to_currency": "USD",
+    "rate": 0.07110605468055606,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "RUB_USD_2025-12-12T10:10:58.178875Z",
+    "from_currency": "RUB",
+    "to_currency": "USD",
+    "rate": 0.012600409513309183,
+    "timestamp": "2025-12-12T10:10:58.178875Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "BTC_USD_2025-12-12T10:24:58.682445Z",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 92477,
+    "timestamp": "2025-12-12T10:24:58.682445Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2025-12-12T10:24:58.682445Z",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 3247.34,
+    "timestamp": "2025-12-12T10:24:58.682445Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "SOL_USD_2025-12-12T10:24:58.682445Z",
+    "from_currency": "SOL",
+    "to_currency": "USD",
+    "rate": 138.21,
+    "timestamp": "2025-12-12T10:24:58.682445Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "EUR_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "EUR",
+    "to_currency": "USD",
+    "rate": 1.1732957878681216,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "CAD_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "CAD",
+    "to_currency": "USD",
+    "rate": 0.7259528130671506,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "JPY_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "JPY",
+    "to_currency": "USD",
+    "rate": 0.006429561581054911,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "GBP_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "GBP",
+    "to_currency": "USD",
+    "rate": 1.339405304045004,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "AUD_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "AUD",
+    "to_currency": "USD",
+    "rate": 0.6661781360335753,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "SCR_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "SCR",
+    "to_currency": "USD",
+    "rate": 0.07110605468055606,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "RUB_USD_2025-12-12T10:24:59.733880Z",
+    "from_currency": "RUB",
+    "to_currency": "USD",
+    "rate": 0.012600409513309183,
+    "timestamp": "2025-12-12T10:24:59.733880Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "BTC_USD_2025-12-12T10:50:13.113643Z",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 92468,
+    "timestamp": "2025-12-12T10:50:13.113643Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2025-12-12T10:50:13.113643Z",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 3246.1,
+    "timestamp": "2025-12-12T10:50:13.113643Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "SOL_USD_2025-12-12T10:50:13.113643Z",
+    "from_currency": "SOL",
+    "to_currency": "USD",
+    "rate": 138.05,
+    "timestamp": "2025-12-12T10:50:13.113643Z",
+    "source": "CoinGecko",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "EUR_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "EUR",
+    "to_currency": "USD",
+    "rate": 1.1732957878681216,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "CAD_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "CAD",
+    "to_currency": "USD",
+    "rate": 0.7259528130671506,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "JPY_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "JPY",
+    "to_currency": "USD",
+    "rate": 0.006429561581054911,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "GBP_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "GBP",
+    "to_currency": "USD",
+    "rate": 1.339405304045004,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "AUD_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "AUD",
+    "to_currency": "USD",
+    "rate": 0.6661781360335753,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "SCR_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "SCR",
+    "to_currency": "USD",
+    "rate": 0.07110605468055606,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "RUB_USD_2025-12-12T10:50:13.936019Z",
+    "from_currency": "RUB",
+    "to_currency": "USD",
+    "rate": 0.012600409513309183,
+    "timestamp": "2025-12-12T10:50:13.936019Z",
+    "source": "ExchangeRate-API",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
   }
 ]
