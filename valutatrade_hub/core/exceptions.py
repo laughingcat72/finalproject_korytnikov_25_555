@@ -1,7 +1,6 @@
 
-# Конкретные исключения
 class InsufficientFundsError(Exception):
-    """Недостаточно средств на счете"""
+    # Недостаточно средств на счете
 
     def __init__(self, currency_code: str, available: float, required: float):
         message = f"Недостаточно средств: доступно {available} {currency_code}, требуется {required} {currency_code}"
@@ -9,7 +8,7 @@ class InsufficientFundsError(Exception):
 
 
 class CurrencyNotFoundError(Exception):
-    """Валюта не найдена"""
+    # Валюта не найдена
 
     def __init__(self, currency_code: str):
         message = f"Неизвестная валюта '{currency_code}'"

@@ -8,7 +8,6 @@ logger = logging.getLogger("valutatrade")
 
 
 class RatesStorage:
-    """Класс для работы с хранилищами курсов"""
 
     def __init__(self, rates_file_path: str, history_file_path: str):
         self.rates_file_path = Path(rates_file_path)
@@ -18,17 +17,7 @@ class RatesStorage:
         self.history_file_path.parent.mkdir(exist_ok=True, parents=True)
 
     def save_current_rates(self, rates: Dict[str, float], source: str):
-        """
-        Сохраняет текущие курсы в rates.json (снимок текущего мира)
-        Формат как в задании:
-        {
-          "pairs": {
-            "EUR_USD": { "rate": 1.0786, "updated_at": "...", "source": "..." },
-            "BTC_USD": { "rate": 59337.21, "updated_at": "...", "source": "..." }
-          },
-          "last_refresh": "..."
-        }
-        """
+
         try:
             timestamp = datetime.utcnow().isoformat() + "Z"
 
@@ -102,7 +91,7 @@ class RatesStorage:
             return False
 
     def _load_history(self) -> List[dict]:
-        """Загружает исторические данные из файла"""
+
         try:
             if self.history_file_path.exists():
                 with open(self.history_file_path, 'r', encoding='utf-8') as f:
@@ -113,7 +102,7 @@ class RatesStorage:
             return []
 
     def get_current_rates(self) -> Dict:
-        """Возвращает текущие курсы из кеша"""
+
         try:
             if self.rates_file_path.exists():
                 with open(self.rates_file_path, 'r', encoding='utf-8') as f:
@@ -124,7 +113,7 @@ class RatesStorage:
             return {"pairs": {}, "last_refresh": None}
 
     def is_cache_expired(self, ttl_seconds: int) -> bool:
-        """Проверяет устарел ли кеш"""
+
         data = self.get_current_rates()
         last_refresh = data.get("last_refresh")
 

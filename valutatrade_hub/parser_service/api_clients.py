@@ -9,23 +9,22 @@ logger = logging.getLogger("valutatrade")
 
 
 class BaseApiClient(ABC):
-    """Абстрактный базовый класс для API-клиентов"""
+    """Абстрактный базовый класс для Апи клиентов"""
 
     @abstractmethod
     def fetch_rates(self) -> Dict[str, float]:
-        """Получить курсы валют"""
+
         pass
 
 
 class CoinGeckoClient(BaseApiClient):
-    """Клиент для работы с CoinGecko API"""
 
     def __init__(self, config: ParserConfig):
         self.config = config
         self.base_url = config.COINGECKO_URL
 
     def fetch_rates(self) -> Dict[str, float]:
-        """Получить курсы криптовалют"""
+
         try:
             crypto_ids = [self.config.CRYPTO_ID_MAP[code]
                           for code in self.config.CRYPTO_CURRENCIES]

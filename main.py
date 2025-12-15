@@ -4,7 +4,7 @@ import shlex
 
 
 def get_time_based_greeting():
-    """Возвращает приветствие в зависимости от времени суток"""
+
     from datetime import datetime
 
     current_hour = datetime.now().hour
@@ -20,7 +20,7 @@ def get_time_based_greeting():
 
 
 def show_welcome():
-    """Показывает приветственное сообщение"""
+
     from datetime import datetime
 
     greeting = get_time_based_greeting()
@@ -65,7 +65,6 @@ def show_help():
 
 
 def main():
-    """Главная функция с интерактивным циклом"""
 
     show_welcome()
 

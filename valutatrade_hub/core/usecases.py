@@ -109,7 +109,6 @@ class AuthUseCase:
 
             pairs = data.get("pairs", {})
 
-            # Прямая пара
             pair_key = f"{from_currency}_{to_currency}"
 
             if pair_key in pairs:
@@ -117,7 +116,6 @@ class AuthUseCase:
 
                 return rate
 
-            # Обратная пара
             reverse_key = f"{to_currency}_{from_currency}"
 
             if reverse_key in pairs:
